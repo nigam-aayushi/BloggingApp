@@ -12,7 +12,7 @@ const userSignup = async (req,res) => {
         const alreadyExits = await User.findOne({email : userData.email})
         if(alreadyExits != null){
            return res.status(403).json({
-             status : 403,
+             status : "Failed",
              message : "User Account Already Exists"
            })
         }else{
@@ -22,7 +22,7 @@ const userSignup = async (req,res) => {
              userData.user_profile = filePath
              await userData.save();
              return res.status(201).json({
-                status : 201,
+                status : "Success",
                 message : "Your Data insert successfully",
               })
         }
@@ -52,27 +52,27 @@ const userLogin = async (req, res) =>{
                 const token = await jwt.sign({userID : alreadyExits._id},process.env.SCREATE_KEY, {expiresIn : '2d'})
                 const userDetail = await User.findOne({email : userData.email}).select('-password')
                 return res.status(200).json({
-                status : 200,
+                status : "Success",
                 message : "User Login Successfully",
                 token : token,
                 userData : userDetail
               })
             }else{
                 res.status(401).json({
-                    status : 401,
+                    status : "Failed",
                     message : "Email or Password is not correct",
                   })
             }
         }else{
           return res.status(401).json({
-                status : 401 ,
+                status : "Failed",
                 message : "User Email incorrect ",
               })
         }
     }
   }catch(error){
     return res.status(500).json({
-        status : 500,
+        status : "Failed",
         message : error.message
       })
   }
@@ -93,7 +93,7 @@ const emailForResetPass = async (req, res) => {
                   text : `<a href=${link}>Click on this for reset password</a>`
                 })
                 return res.status(200).json({
-                  status : 200,
+                  status : "Success",
                   message : "Email send to user Successfully",
                   Token : token,
                   userID : alreadyExits._id
@@ -117,10 +117,9 @@ const resetPassword = async (req, res) => {
        const {newPassword, confirmPass} = req.body
     try{
       const userExits = await User.findById(userId)
-      console.log("userID==>",userExits._id);
       if(userExits != null){
        const newToken = userId + process.env.SCREATE_KEY
-       jwt.verify(token, newToken);
+      const {userID}= jwt.verify(token, newToken);
        if(newPassword === confirmPass){
         const salt = await brcrypt.genSalt(10)
         var password = await brcrypt.hash(confirmPass, salt)
@@ -128,12 +127,12 @@ const resetPassword = async (req, res) => {
           {$set : {password : password}})
         res.status(200).json({
           status : "Success",
-          Message : "Password rest successfully "
+          Message : "Password rest successfully ",
         })  
        }else{
         res.status(401).json({
           status : "Failed",
-          Message : "Password is not match "
+          Message : "Password and Confirm is not match "
         })
        }
       }else{
@@ -155,7 +154,7 @@ const myBlog = async (req, res) => {
    try{
          const userBlogs = await BlogSchema.find({userId : id })
         return res.status(200).json({
-          status : 200,
+          status : "Success",
           UserBlogs : userBlogs,
          })
    }catch(err){

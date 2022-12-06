@@ -7,7 +7,7 @@ module.exports =  {
         console.log("blog data====>",data);
         const value = await blogSchema.add_blogs.validate(req.body, {abortEarly : false})
          if(value.error){
-            res.json({
+            res.satus(204).json({
                 status : "Faild",
                 message : value.error.details[0].message
             })

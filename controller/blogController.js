@@ -8,10 +8,10 @@ const blogCreate = async (req,res) => {
     try{
         const  filePath = `/uploads/${req.file.filename}` 
         blogData.blog_pic = filePath
-        const addBlogs = await blogData.save();
+         await blogData.save();
         res.status(201).json({
-            status : 201,
-            message : "Your Blog Store Successfully",
+            status : "Success",
+            message : "Blog Create Successfully",
         })
     }catch(err){
        res.json({
@@ -31,7 +31,7 @@ const listOfBlogs = async (req, res) => {
         })
     }catch(err){
       res.json({
-        status : 500,
+        status : "Failed",
          message : err.message
       })
     }
@@ -51,7 +51,7 @@ const blogDetails = async (req, res) => {
         })
     }catch(err){
          res.status(500).json({
-            status : 500,
+            status : "Failed",
             message : err.message
          })
     }
@@ -62,7 +62,7 @@ const deleteBlog = async (req, res) => {
     try{
          await BlogSchema.findByIdAndDelete(id)
         res.status(202).json({
-            status : 202,
+            status : "Delete",
             message : "Blog Delete SuccessFully"
          })
     }catch(err){
@@ -113,7 +113,7 @@ const searchBlog = async (req, res) => {
          })
     }catch(err){
       res.status(500).json({
-        status : "Faild",
+        status : "Failed",
         message : err.message
       })
     }

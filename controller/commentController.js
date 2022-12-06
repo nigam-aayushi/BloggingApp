@@ -7,12 +7,12 @@ const addComment = async (req, res) =>{
     try{
        const userComment = await  comment.save()
        res.status(201).json({
-        status : 201,
+        status : "Success",
         message : "Comment Add Successfully"
        })
     }catch(err){
        res.status(500).json({
-          status : 500,
+          status : "Failed",
           message : err.message 
        })
     }
